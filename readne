@@ -1,0 +1,222 @@
+# Personal Blog (Flask)
+
+A full-featured personal blogging platform built with **Flask** and **SQLAlchemy**. It supports user authentication, post management with Markdown, categories, tags, comments with replies, RSS feed, image uploads, and a responsive UI.
+
+## Features
+
+- 📝 **Blog Posts** — Create, edit, delete, and publish posts with Markdown support and featured images
+- 🏷️ **Categories & Tags** — Organize posts by category and tag
+- 👤 **Authentication** — Register, login, logout, profile management, and public author profiles
+- 💬 **Comments** — Comment on posts with threaded replies and admin moderation
+- 🔎 **Search** — Search posts by title and content
+- 📡 **RSS Feed** — Auto-generated RSS 2.0 feed of latest posts
+- 📈 **Analytics** — Track post views, active users, and blog statistics
+- 🖼️ **Image Uploads** — Secure image handling with allowed extensions and unique file names
+- 🎨 **Responsive UI** — Clean, mobile-friendly design with custom CSS and JavaScript
+- 🛡️ **Security** — Password hashing, CSRF protection via Flask-WTF, access control for admin-only features
+
+## Tech Stack
+
+- **Backend:** Python, Flask 3.0
+- **Database:** SQLAlchemy (defaults to SQLite)
+- **Auth:** Flask-Login
+- **Forms:** Flask-WTF / WTForms
+- **Frontend:** HTML5, CSS3, JavaScript (Jinja2 templates)
+- **Other:** Werkzeug, python-dotenv, email-validator
+
+## Requirements
+
+- Python 3.8+
+- pip
+
+Dependencies are listed in [`requirements.txt`](requirements.txt):
+
+```
+Flask==3.0.3
+Flask-SQLAlchemy==3.1.1
+Flask-Login==0.6.3
+Flask-WTF==1.2.1
+WTForms==3.1.2
+Werkzeug==3.0.3
+email-validator==2.1.1
+python-dotenv==1.0.1
+```
+
+## Installation
+
+1. **Clone or download** the repository and navigate into the project folder:
+
+   ```bash
+   cd personal-blog-flask
+   ```
+
+2. **Create and activate a virtual environment** (recommended):
+
+   ```bash
+   # Windows
+   python -m venv venv
+   venv\Scripts\activate
+
+   # macOS / Linux
+   python -m venv venv
+   source venv/bin/activate
+   ```
+
+3. **Install dependencies:**
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **(Optional) Configure environment variables:**
+
+   Create a `.env` file in the project root (see [Configuration](#configuration)):
+
+   ```bash
+   SECRET_KEY=your-secret-key
+   DATABASE_URL=sqlite:///blog.db
+   ```
+
+## Configuration
+
+The application is configured in [`config.py`](config.py). Configuration values can be overridden via environment variables:
+
+| Variable               | Default                       | Description                                  |
+| ---------------------- | ----------------------------- | -------------------------------------------- |
+| `SECRET_KEY`           | `dev-secret-key-change-in-production` | Flask session secret key           |
+| `DATABASE_URL`         | `sqlite:///blog.db`           | Database connection URI                      |
+| `UPLOAD_FOLDER`        | `app/static/images/uploads`   | Where uploaded images are stored             |
+| `MAX_CONTENT_LENGTH`   | `16 * 1024 * 1024` (16 MB)    | Maximum upload size                          |
+| `ALLOWED_EXTENSIONS`   | `png, jpg, jpeg, gif, webp`   | Allowed image file types                     |
+| `POSTS_PER_PAGE`       | `5`                           | Number of posts shown per page               |
+
+> ⚠️ **Important**: Change the default `SECRET_KEY` before deploying to production.
+
+## Running the App
+
+Run the app in development mode:
+
+```bash
+python run.py
+```
+
+The server will start at **http://127.0.0.1:5000**.
+
+The first registered user automatically becomes an **admin**.
+
+## Project Structure
+
+```
+personal-blog-flask/
+├── app/
+│   ├── static/
+│   │   ├── css/style.css          # Stylesheet
+│   │   ├── js/main.js             # Frontend JavaScript
+│   │   └── images/uploads/        # Uploaded post images
+│   ├── templates/                 # Jinja2 HTML templates
+│   │   ├── base.html              # Main layout
+│   │   ├── auth/                  # Login, register, profile pages
+│   │   ├── main/                  # Home, about, contact pages
+│   │   ├── posts/                 # Post form, view, category pages
+│   │   └── errors/                # 403, 404, 500 error pages
+│   ├── auth/                      # Authentication blueprint
+│   │   ├── forms.py
+│   │   └── routes.py
+│   ├── main/                      # Main site blueprint
+│   │   ├── forms.py
+│   │   └── routes.py
+│   ├── posts/                     # Posts blueprint
+│   │   ├── forms.py
+│   │   └── routes.py
+│   ├── comments/                  # Comments blueprint
+│   │   ├── forms.py
+│   │   └── routes.py
+│   ├── __init__.py                # App factory (create_app)
+│   ├── errors.py                  # Error handlers
+│   ├── markdown_filter.py         # Markdown Jinja filter
+│   └── models.py                  # SQLAlchemy models
+├── tests/
+│   └── conftest.py                # Test fixtures
+├── config.py                      # Application configuration
+├── requirements.txt               # Python dependencies
+├── run.py                         # App entry point
+├── smoke_test.py                  # Basic smoke test
+└── README.md
+```
+
+## Database Models
+
+| Model    | Description                                    |
+| -------- | ---------------------------------------------- |
+| `User`   | Blog users with username, email, profile, admin flag |
+| `Category` | Post categories                              |
+| `Tag`    | Post tags (many-to-many with posts)            |
+| `Post`   | Blog posts with title, content, slug, image, views |
+| `Comment`| Comments and threaded replies on posts         |
+
+The database tables are created automatically on app startup via `db.create_all()`.
+
+## Routes Overview
+
+### Main
+| Route          | Method       | Description                  |
+| -------------- | ------------ | ---------------------------- |
+| `/`            | GET          | Home page with posts, search, stats |
+| `/about`       | GET          | About page                   |
+| `/contact`     | GET, POST    | Contact form                 |
+| `/newsletter`  | POST         | Newsletter subscription      |
+| `/rss`         | GET          | RSS feed                     |
+
+### Auth
+| Route               | Method       | Description                    |
+| ------------------- | ------------ | ------------------------------ |
+| `/register`         | GET, POST    | Create a new account           |
+| `/login`            | GET, POST    | Log in                         |
+| `/logout`           | GET          | Log out (requires login)       |
+| `/profile`          | GET, POST    | Edit profile (requires login)  |
+| `/user/<username>`  | GET          | View a public author profile   |
+
+### Posts
+| Route                | Method       | Description                              |
+| -------------------- | ------------ | ---------------------------------------- |
+| `/post/new`          | GET, POST    | Create a post (requires login)           |
+| `/post/<slug>`       | GET          | View a post and increment views          |
+| `/post/<slug>/edit`  | GET, POST    | Edit a post (owner/admin)                |
+| `/post/<slug>/delete`| POST         | Delete a post (owner/admin)              |
+| `/category/new`      | GET, POST    | Create a category (admin)                |
+| `/category/<name>`   | GET          | View posts in a category                 |
+
+### Comments
+| Route                                | Method | Description                          |
+| ------------------------------------ | ------ | ------------------------------------ |
+| `/post/<slug>/comment`               | POST   | Add a comment (requires login)       |
+| `/post/<slug>/comment/<id>/reply`    | POST   | Reply to a comment (requires login)  |
+| `/comment/<id>/delete`               | POST   | Delete a comment (owner/admin)       |
+| `/comment/<id>/approve`              | POST   | Approve a comment (admin)            |
+
+## Testing
+
+A smoke test and `pytest` fixtures are included. To run the tests:
+
+```bash
+pip install pytest
+pytest -v
+```
+
+## Deployment Notes
+
+- Set a strong `SECRET_KEY` and a production `DATABASE_URL` via environment variables.
+- Use a production WSGI server such as **Gunicorn** or **Waitress**:
+
+  ```bash
+  # Example with Gunicorn
+  gunicorn run:app
+  ```
+
+- Serve static files and uploaded images via a reverse proxy (e.g., Nginx) or a CDN.
+- Use a dedicated database (e.g., **PostgreSQL** / **MySQL**) instead of the default SQLite file.
+
+## License
+
+This project is for personal/educational use. Feel free to modify and extend it to suit your needs.
+
