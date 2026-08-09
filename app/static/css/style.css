@@ -1,0 +1,82 @@
+/* Custom styles for Personal Blog */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+}
+
+.hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #ffffff;
+    border-radius: 1rem;
+}
+
+.hero-section .lead {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.blog-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: none;
+}
+
+.blog-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.post-content {
+    line-height: 1.8;
+    font-size: 1.1rem;
+}
+
+.post-content h2,
+.post-content h3,
+.post-content h4 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.post-content pre {
+    background-color: #2d2d2d;
+    color: #f8f8f2;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+}
+
+.post-content code {
+    background-color: #e9ecef;
+    padding: 0.1rem 0.3rem;
+    border-radius: 0.25rem;
+    font-size: 0.9em;
+}
+
+.post-content pre code {
+    background-color: transparent;
+    padding: 0;
+}
+
+.post-content img {
+    max-width: 100%;
+    border-radius: 0.5rem;
+}
+
+.comment {
+    background-color: #ffffff;
+    border-radius: 0.5rem;
+}
+
+.footer a:hover {
+    color: #ffc107 !important;
+}
+
+/* SimpleMDE customization */
+.CodeMirror {
+    min-height: 300px;
+    border-radius: 0.375rem;
+}
+
+.editor-toolbar {
+    border-radius: 0.375rem 0.375rem 0 0;
+}

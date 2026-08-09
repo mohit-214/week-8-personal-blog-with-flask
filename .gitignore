@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.env
+
+# Flask / DB
+instance/
+blog.db
+*.sqlite
+*.sqlite3
+
+# Uploads
+app/static/images/uploads/*
+!app/static/images/uploads/.gitkeep
+
+# Misc
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde@1.11.2/dist/simplemde.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h1 class="h3 mb-4">
+                    {% if post %}<i class="bi bi-pencil-square"></i> Edit Post{% else %}<i class="bi bi-plus-circle"></i> New Post{% endif %}
+                </h1>
+                <form method="post" enctype="multipart/form-data" novalidate>
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.title.label(class="form-label") }}
+                        {% if form.title.errors %}
+                            {{ form.title(class="form-control is-invalid") }}
+                            <div class="invalid-feedback">{{ form.title.errors[0] }}</div>
+                        {% else %}
+                            {{ form.title(class="form-control") }}
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.category_id.label(class="form-label") }}
+                        {{ form.category_id(class="form-select") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.content.label(class="form-label") }}
+                        {% if form.content.errors %}
+                            {{ form.content(class="form-control is-invalid", rows=10) }}
+                            <div class="invalid-feedback">{{ form.content.errors[0] }}</div>
+                        {% else %}
+                            {{ form.content(class="form-control", rows=10) }}
+                        {% endif %}
+                        <div class="form-text">Markdown is supported.</div>
+                    </div>
+                    <div class="mb-3">
+                        {{ form.excerpt.label(class="form-label") }}
+                        {{ form.excerpt(class="form-control", rows=2) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.image.label(class="form-label") }}
+                        {{ form.image(class="form-control") }}
+                        {% if post and post.image %}
+                        <div class="mt-2">
+                            <img src="{{ url_for('static', filename='images/uploads/' ~ post.image) }}" alt="Current image" class="img-thumbnail" style="max-height: 120px;">
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-check mb-4">
+                        {{ form.is_published(class="form-check-input") }}
+                        {{ form.is_published.label(class="form-check-label") }}
+                    </div>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Save Post</button>
+                    <a href="{% if post %}{{ url_for('posts.view_post', slug=post.slug) }}{% else %}{{ url_for('main.index') }}{% endif %}" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/simplemde@1.11.2/dist/simplemde.min.js"></script>
+<script>
+    new SimpleMDE({ element: document.getElementById("content") });
+</script>
+{% endblock %}
